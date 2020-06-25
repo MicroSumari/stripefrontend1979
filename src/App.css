@@ -1,0 +1,28 @@
+.shadow {
+  display: block;
+  width:100%;
+  box-shadow: 5px 3px 5px;
+  height: 40px;
+  margin: 10px 0 0 0;
+}
+.parent {
+  margin-left: 15%;
+  margin-right: 15%;
+  max-width: 600px;
+}
+.right {
+  float:left;
+  white-space: nowrap;
+  padding-top:10px;
+  font-size: 20px;
+  width:30%;
+}
+.center { 
+  float:left;
+  white-space: nowrap;
+  width: 16%; 
+  margin-top:10px;
+  padding-left: 50px;
+  font-size: 17px;
+}
+
