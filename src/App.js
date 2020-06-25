@@ -1,5 +1,7 @@
 import React from 'react';
 import './App.css'
+import CONSTANT from './Variables';
+
 const axios = require('axios');
 
 class App extends React.Component {
@@ -12,7 +14,8 @@ class App extends React.Component {
     couponValue: '',
     couponDuration:'',
     USD_P: '',
-    err_msg:'' 
+    err_msg:'',
+    state_change:false
   }
 
   onChangeCouponName = (e) => {this.setState({couponName:e.target.value})};
@@ -21,29 +24,41 @@ class App extends React.Component {
   onChangeCouponUSDorPercent = (e)=> {this.setState({USD_P:e.target.value})};
   
   async componentDidMount(){
-    
-    const response = await axios.get('https://stripe-backend-1979.herokuapp.com/tokens');
+    console.log(CONSTANT.URL,11111);
+    const response = await axios.get(`${CONSTANT.URL}/tokens`);
     this.setState({tokens:response.data});
     console.log(response);
   };
 
   async deleteCoupon (index){
     const id = this.state.tokens[index].id;
-    const response = await axios.delete(`https://stripe-backend-1979.herokuapp.com/delete-token/${id}`);
-    this.forceUpdate();
+    const response = await axios.delete(`${CONSTANT.URL}/delete-token/${id}`);
+    window.location.reload();
+  }
+  refereshStates(){
+    this.setState(
+      {
+        couponName:'',
+        couponValue: '',
+        couponDuration: '',
+        USD_Percentage: '',
+        err_msg:''
+      }
+    )
   }
   async createNewCoupon (){
-    console.log(this.state.couponName,'Name1111')
-    const response = await axios.post('https://stripe-backend-1979.herokuapp.com/new-token',{data:{
+      const response = await axios.post('http://localhost:5000/new-token',{data:{
       couponName: this.state.couponName,
       couponValue: this.state.couponValue,
       couponDuration: this.state.couponDuration,
       USD_Percentage: this.state.USD_P
     }});
+    this.refereshStates();
+    window.location.reload();
   }
   
   async updateExistingCoupon (){
-    const response = await axios.post('http://localhost:5000/update-token',{data:{
+    const response = await axios.post(`${CONSTANT.URL}/update-token`,{data:{
           key: this.state.key,
           couponName: this.state.couponName,
           couponValue: this.state.couponValue,
@@ -201,9 +216,7 @@ class App extends React.Component {
         )
       })
     }
-
     catch(e){
-        console.log(e)
     }
   }
   render(){
@@ -215,7 +228,6 @@ class App extends React.Component {
       {this.renderList()}
       <div style={{textAlign:'center'}}>
         <button style={{marginTop:'10px'}}className="blue ui button" onClick={(e)=>{this.setState({showForm: true})}}>
-
           Add a new Coupon
         </button>
       </div>
